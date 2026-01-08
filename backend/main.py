@@ -100,7 +100,19 @@ async def create_contribution(contribution: ContributionCreate):
 @app.get("/api/contributions")
 async def get_contributions():
     contributions = []
-    cursor = contributions_collection.find().sort("date", -1)
+    cursor = contributions_collection.find(
+        {},
+        {
+            "_id": 1,
+            "date": 1,
+            "contribution_type": 1,
+            "reference": 1,
+            "time_spent": 1,
+            "description": 1,
+            "input_mode": 1,
+            "created_at": 1
+        }
+    ).sort("date", -1).limit(1000)
     
     async for doc in cursor:
         doc["_id"] = str(doc["_id"])
