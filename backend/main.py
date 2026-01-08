@@ -7,6 +7,9 @@ from datetime import datetime
 from bson import ObjectId
 import os
 from openai import OpenAI
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = FastAPI()
 
@@ -21,14 +24,14 @@ app.add_middleware(
 )
 
 # MongoDB
-MONGO_URL = os.environ.get('MONGO_URL')
-DB_NAME = os.environ.get('DB_NAME')
+MONGO_URL = os.getenv('MONGO_URL', 'mongodb://localhost:27017')
+DB_NAME = os.getenv('DB_NAME', 'test_database')
 client = AsyncIOMotorClient(MONGO_URL)
 db = client[DB_NAME]
 contributions_collection = db["contributions"]
 
 # OpenAI
-openai_client = OpenAI(api_key=os.environ.get('OPENAI_API_KEY'))
+openai_client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
 
 # Models
 class PyObjectId(ObjectId):
